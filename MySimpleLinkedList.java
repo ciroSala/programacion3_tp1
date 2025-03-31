@@ -15,7 +15,7 @@ public class MySimpleLinkedList<T> {
     y en un arreglo tiene costo O(n)
     */
     public void insertFront(T info) {
-        Node<T> tmp = new Node<T>(info,null);
+        Node<T> tmp = new Node<T>(info, null);
         tmp.setNext(this.first);
         this.first = tmp;
         this.size++;
@@ -50,20 +50,20 @@ public class MySimpleLinkedList<T> {
 
     //ver si esta vacia una lista vinculada es O(1) y en un arreglo o(n)
     public boolean isEmpty() {
-        return this.first==null;
+        return this.first == null;
     }
 
     //Buscar en una lista vinculada es O(n) y en un arreglo O(1)
     public T get(int index) {
         int i = 0;
-        if(index>=0 && this.size>1 && this.size>index) {
+        if (index >= 0 && this.size > 1 && this.size > index) {
             Node<T> cursor = this.first;
             while (i < index) { // n
                 cursor = cursor.getNext();
                 i++;
             }
             return cursor.getInfo();
-        }else{
+        } else {
             return null;
         }
     }
@@ -79,15 +79,15 @@ public class MySimpleLinkedList<T> {
         Node<T> cursor = this.first;
         boolean existeOtro = false;
         String salida = "[ ";
-        if(size>0) {
+        if (size > 0) {
             existeOtro = true;
         }
-        while(existeOtro) {
+        while (existeOtro) {
             salida += cursor.getInfo();
-            if(cursor.getNext() != null){
+            if (cursor.getNext() != null) {
                 salida += ", ";
                 cursor = cursor.getNext();
-            }else {
+            } else {
                 existeOtro = false;
             }
         }
@@ -95,4 +95,31 @@ public class MySimpleLinkedList<T> {
         return salida;
     }
 
+    /*
+     A la implementación de la clase Lista realizada en el ejercicio 1, agregue un método
+    int indexOf(T), que reciba un elemento y retorne el índice donde está almacenado ese
+    elemento, o -1 si el elemento no existe en la lista.
+     */
+    public int indexOf(T valor) {
+        Node<T> cursor = this.first;
+        int indice = 0;
+        boolean encontro = false;
+        if (this.first != null) {
+            while (!encontro && indice < size) {
+                if (cursor.getInfo() == valor) {
+                    encontro = true;
+                } else {
+                    cursor = cursor.getNext();
+                    indice++;
+                }
+            }
+            if (encontro) {
+                return indice;
+            }else {
+                return -1;
+            }
+        }else{
+            return -1;
+        }
+    }
 }

@@ -10,6 +10,10 @@ public class MySimpleLinkedList<T> {
         this.size = 0;
     }
 
+    /*
+    Insertar en una lista vinculada al principio tiene costo O(1)
+    y en un arreglo tiene costo O(n)
+    */
     public void insertFront(T info) {
         Node<T> tmp = new Node<T>(info,null);
         tmp.setNext(this.first);
@@ -17,6 +21,7 @@ public class MySimpleLinkedList<T> {
         this.size++;
     }
 
+    //extraer del principio en una lista vinculada tiene costo O(1)
     public T extractFront() {
         T info = this.first.getInfo();
         this.first = this.first.getNext();
@@ -24,16 +29,36 @@ public class MySimpleLinkedList<T> {
         return info;
     }
 
-    public boolean isEmpty() {
-        return this.size==0;
+    //extraer un elemento de la lista vinculada tiene costo O(n) y en un arreglo O(1)
+    public void extracIndice(int indice) {
+        if (indice >= 0 && this.first != null && this.size > indice) {
+            Node<T> anteriorCursor = this.first;
+            Node<T> cursor = anteriorCursor.getNext();
+            int inicio = 1;
+            if (indice == 0) {
+                this.extractFront();
+            } else {
+                while (inicio < indice) {
+                    anteriorCursor = cursor;
+                    cursor = cursor.getNext();
+                    inicio++;
+                }
+                anteriorCursor.setNext(cursor.getNext());
+            }
+        }
     }
 
+    //ver si esta vacia una lista vinculada es O(1) y en un arreglo o(n)
+    public boolean isEmpty() {
+        return this.first==null;
+    }
+
+    //Buscar en una lista vinculada es O(n) y en un arreglo O(1)
     public T get(int index) {
         int i = 0;
-        Node<T> cursor = null;
-        if(index>=0 && size>1 && size>index) {
-            cursor = this.first;
-            while (i < index) {
+        if(index>=0 && this.size>1 && this.size>index) {
+            Node<T> cursor = this.first;
+            while (i < index) { // n
                 cursor = cursor.getNext();
                 i++;
             }
@@ -43,6 +68,8 @@ public class MySimpleLinkedList<T> {
         }
     }
 
+    //Determinar la cantidad de elementos en una lista vinculada es O(1)
+    // y en un arreglo O(n)
     public int size() {
         return this.size;
     }

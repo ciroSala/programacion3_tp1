@@ -1,7 +1,7 @@
 package tp1;
+import java.util.Iterator;
 
-public class MySimpleLinkedList<T> {
-
+public class MySimpleLinkedList<T> implements Iterable<Node<T>>{
     private Node<T> first;
     private int size;
 
@@ -10,8 +10,12 @@ public class MySimpleLinkedList<T> {
         this.size = 0;
     }
 
+    public Iterator<Node<T>> iterator(){
+        return new IteratorSimpleLinkedList(this.first);
+    }
+
     /*
-    Insertar en una lista vinculada al principio tiene costo O(1)
+     Insertar en una lista vinculada al principio tiene costo O(1)
     y en un arreglo tiene costo O(n)
     */
     public void insertFront(T info) {
@@ -30,42 +34,47 @@ public class MySimpleLinkedList<T> {
     }
 
     //extraer un elemento de la lista vinculada tiene costo O(n) y en un arreglo O(1)
-    public void extracIndice(int indice) {
-        if (indice >= 0 && this.first != null && this.size > indice) {
-            Node<T> anteriorCursor = this.first;
-            Node<T> cursor = anteriorCursor.getNext();
-            int inicio = 1;
+    public T extracIndice(int indice) {
+        T infoCursor = null;
+        if (indice >= 0 && this.size > indice) {
             if (indice == 0) {
-                this.extractFront();
+                infoCursor = this.extractFront();
+                return infoCursor;
             } else {
+                Node<T> anteriorCursor = this.first;
+                Node<T> cursor = anteriorCursor.getNext();
+                infoCursor = cursor.getInfo();
+                int inicio = 1;
                 while (inicio < indice) {
                     anteriorCursor = cursor;
                     cursor = cursor.getNext();
+                    infoCursor = cursor.getInfo();
                     inicio++;
                 }
                 anteriorCursor.setNext(cursor.getNext());
+                return infoCursor;
             }
         }
+        return infoCursor;
     }
 
-    //ver si esta vacia una lista vinculada es O(1) y en un arreglo o(n)
+    //ver si esta vacia una lista vinculada es O(1) y en un arreglo o(n) ??
     public boolean isEmpty() {
         return this.first == null;
     }
 
     //Buscar en una lista vinculada es O(n) y en un arreglo O(1)
     public T get(int index) {
-        int i = 0;
-        if (index >= 0 && this.size > 1 && this.size > index) {
+        if (index >= 0 && this.size > index) {
             Node<T> cursor = this.first;
+            int i = 0;
             while (i < index) { // n
                 cursor = cursor.getNext();
                 i++;
             }
             return cursor.getInfo();
-        } else {
-            return null;
         }
+        return null;
     }
 
     //Determinar la cantidad de elementos en una lista vinculada es O(1)
@@ -101,25 +110,44 @@ public class MySimpleLinkedList<T> {
     elemento, o -1 si el elemento no existe en la lista.
      */
     public int indexOf(T valor) {
-        Node<T> cursor = this.first;
         int indice = 0;
-        boolean encontro = false;
-        if (this.first != null) {
-            while (!encontro && indice < size) {
-                if (cursor.getInfo() == valor) {
-                    encontro = true;
-                } else {
-                    cursor = cursor.getNext();
-                    indice++;
-                }
-            }
-            if (encontro) {
+        Node<T> cursor = this.first;
+        while (indice < size) {
+            if (cursor.getInfo() == valor) {
                 return indice;
-            }else {
-                return -1;
+            } else {
+                cursor = cursor.getNext();
+                indice++;
             }
-        }else{
-            return -1;
         }
+        return -1;
     }
+
+
+        /*
+        A partir de la clase Lista implementada en el ejercicio 1, implemente el patrón
+        iterator-iterable, para que la lista sea iterable. ¿Existe alguna ventaja computacional a la hora
+        de recorrer la lista de principio a fin si se cuenta con un iterador?
+         */
+
+        //generar clase privada donde se encuentra el iterador
+        private class IteratorSimpleLinkedList implements Iterator<Node<T>>{
+            private Node<T> cursor;
+
+            public IteratorSimpleLinkedList(Node<T> nodo){
+                this.cursor = nodo;
+            }
+
+            @Override
+            public boolean hasNext() {
+                return (this.cursor!=null);
+            }
+
+            @Override
+            public Node<T> next() {
+                Node<T> nodo = this.cursor;
+                this.cursor = this.cursor.getNext();
+                return nodo;
+            }
+        }
 }

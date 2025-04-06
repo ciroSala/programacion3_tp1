@@ -1,12 +1,16 @@
 package tp1;
 
-public class Node<T> {
+public class Node<T extends Comparable<T>> {
     private T info;
     private Node<T> next;
 
     public Node() {
         this.info = null;
         this.next = null;
+    }
+
+    public Node(T info) {
+        this.setInfo(info);
     }
 
     public Node(T info, Node<T> next) {
@@ -29,4 +33,5 @@ public class Node<T> {
     public void setInfo(T info) {
         this.info = info;
     }
+
 }

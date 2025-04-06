@@ -1,7 +1,7 @@
 package tp1;
 import java.util.Iterator;
 
-public class MySimpleLinkedList<T> implements Iterable<Node<T>>{
+public class MySimpleLinkedList<T extends Comparable<T>> implements Iterable<Node<T>>{
     private Node<T> first;
     private int size;
 
@@ -12,6 +12,38 @@ public class MySimpleLinkedList<T> implements Iterable<Node<T>>{
 
     public Iterator<Node<T>> iterator(){
         return new IteratorSimpleLinkedList(this.first);
+    }
+
+    public void addOrdenado(T info){
+        if(this.size==0){
+            this.insertFront(info);
+        }else{
+            Node<T> cursorAnterior = null;
+            Node<T> cursor = this.first;
+            Node<T> nodo = new Node<T>(info);
+            int inicio = 0;
+            boolean add = false;
+            while(inicio<this.size && !add){
+                //comparar si el valor a agregar es mayor al valor del cursor
+                if(info.compareTo(cursor.getInfo())>0){
+                    cursorAnterior = cursor;
+                    cursor = cursor.getNext();
+                    inicio++;
+                }else{
+                    nodo.setNext(cursor);
+                    cursorAnterior.setNext(nodo);
+                    add = true;
+                }
+            }
+            /* Si es el ultimo (que el inicio llego a ser igual al final y no agrego)
+            agregar al final porque es mayor que todos los valores
+            (cursorAnterior quedo apuntando al ultimo y cursor a nulo).
+            */
+            if(inicio==size){
+                cursorAnterior.setNext(nodo);
+            }
+            this.size++;
+        }
     }
 
     /*
@@ -33,7 +65,7 @@ public class MySimpleLinkedList<T> implements Iterable<Node<T>>{
         return info;
     }
 
-    //extraer un elemento de la lista vinculada tiene costo O(n) y en un arreglo O(1)
+    //extraer un elemento de la lista vinculada tiene costo O(n) y en un arreglo O(n)
     public T extracIndice(int indice) {
         T infoCursor = null;
         if (indice >= 0 && this.size > indice) {
@@ -78,19 +110,21 @@ public class MySimpleLinkedList<T> implements Iterable<Node<T>>{
     }
 
     //Determinar la cantidad de elementos en una lista vinculada es O(1)
-    // y en un arreglo O(n)
+    // y en un arreglo O(n) ??
     public int size() {
         return this.size;
     }
 
     @Override
     public String toString() {
-        Node<T> cursor = this.first;
         boolean existeOtro = false;
-        String salida = "[ ";
-        if (size > 0) {
+        Node<T> cursor = this.first;
+        if(this.size>=1){
             existeOtro = true;
+        }else{
+            existeOtro = false;
         }
+        String salida = "[ ";
         while (existeOtro) {
             salida += cursor.getInfo();
             if (cursor.getNext() != null) {
@@ -103,6 +137,7 @@ public class MySimpleLinkedList<T> implements Iterable<Node<T>>{
         salida += " ]";
         return salida;
     }
+
 
     /*
      A la implementación de la clase Lista realizada en el ejercicio 1, agregue un método

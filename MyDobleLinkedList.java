@@ -2,7 +2,7 @@ package tp1;
 import javax.swing.text.html.HTMLDocument;
 import java.util.Iterator;
 
-public class MyDobleLinkedList<T extends Comparable<T>> implements Iterable<NodeDoble<T>> {
+public class MyDobleLinkedList<T extends Comparable<T>> implements Iterable<T> {
     private NodeDoble<T> first;
     private int size;
 
@@ -14,19 +14,23 @@ public class MyDobleLinkedList<T extends Comparable<T>> implements Iterable<Node
     void insertFront(T info){
         NodeDoble<T> tmp = new NodeDoble<>();
         tmp.setInfo(info);
-        this.first.setAnterior(tmp);
-        tmp.setSiguiente(this.first);
-        this.first = tmp;
-        this.size++;
+        if(this.first!=null){
+            this.first.setAnterior(tmp);
+            tmp.setSiguiente(this.first);
+            this.first = tmp;
+            this.size++;
+        }else{
+            this.first = tmp;
+        }
     }
 
     @Override
-    public Iterator<NodeDoble<T>> iterator() {
+    public Iterator<T> iterator() {
         return new IteratorDobleLinkedList(this.first);
     }
 
     T extractFront(){
-        if(this.size>0){
+        if(this.first!=null){
             T info = this.first.getInfo();
             this.first = this.first.getSiguiente();
             this.first.setAnterior(null);
@@ -45,9 +49,32 @@ public class MyDobleLinkedList<T extends Comparable<T>> implements Iterable<Node
         return this.size;
     }
 
-    //String toString)
-    //T get(index)
-    private class IteratorDobleLinkedList implements Iterator<NodeDoble<T>>{
+    public String toString(){
+        Iterator<T> iterator = this.iterator();
+        String salida = "[";
+        while(iterator.hasNext()){
+            salida += iterator.next() + ", ";
+        }
+        //sacar la ultima coma, entonces selecciono todos los caracteres que quiero
+        //(todos excepto los dos antes de cerrar el arreglo)
+        salida = salida.substring(0,salida.length()-2);
+        return salida += "]";
+    }
+
+    T get(int index){
+        if(index<this.size){
+            T salida = null;
+            int inicio = -1;
+            Iterator<T> iterator = this.iterator();
+            while(iterator.hasNext() && inicio<index){
+                salida = iterator.next();
+                inicio++;
+            }
+            return salida;
+        }
+        return null;
+    }
+    private class IteratorDobleLinkedList implements Iterator<T>{
         private NodeDoble<T> cursor;
 
         public IteratorDobleLinkedList(NodeDoble<T> nodo){
@@ -60,10 +87,10 @@ public class MyDobleLinkedList<T extends Comparable<T>> implements Iterable<Node
         }
 
         @Override
-        public NodeDoble<T> next() {
-            NodeDoble<T> nodo = this.cursor;
+        public T next() {
+            T info = this.cursor.getInfo();
             this.cursor = this.cursor.getSiguiente();
-            return nodo;
+            return info;
         }
     }
 }

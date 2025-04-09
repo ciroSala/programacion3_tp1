@@ -3,7 +3,13 @@ import java.util.Iterator;
 
 public class Main {
     public static void main(String[] args) {
-
+        MyDobleLinkedList<Integer> listaDoble = new MyDobleLinkedList<>();
+        listaDoble.insertFront(3);
+        listaDoble.insertFront(4);
+        listaDoble.insertFront(5);
+        listaDoble.insertFront(8);
+        System.out.println(listaDoble.toString());
+        System.out.println(listaDoble.get(2));
         /*
         Ejercicio 5
 

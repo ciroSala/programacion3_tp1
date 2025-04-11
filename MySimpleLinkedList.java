@@ -1,7 +1,7 @@
 package tp1;
 import java.util.Iterator;
 
-public class MySimpleLinkedList<T extends Comparable<T>> implements Iterable<Node<T>>{
+public class MySimpleLinkedList<T extends Comparable<T>> implements Iterable<T>{
     private Node<T> first;
     private int size;
 
@@ -10,46 +10,10 @@ public class MySimpleLinkedList<T extends Comparable<T>> implements Iterable<Nod
         this.size = 0;
     }
 
-    public Iterator<Node<T>> iterator(){
-        return new IteratorSimpleLinkedList(this.first);
-    }
-
-    public void addOrdenado(T info){
-        if(this.size==0){
-            this.insertFront(info);
-        }else{
-            Node<T> cursorAnterior = null;
-            Node<T> cursor = this.first;
-            Node<T> nodo = new Node<T>(info);
-            int inicio = 0;
-            boolean add = false;
-            while(inicio<this.size && !add){
-                //comparar si el valor a agregar es mayor al valor del cursor
-                if(info.compareTo(cursor.getInfo())>0){
-                    cursorAnterior = cursor;
-                    cursor = cursor.getNext();
-                    inicio++;
-                }else{
-                    nodo.setNext(cursor);
-                    cursorAnterior.setNext(nodo);
-                    add = true;
-                }
-            }
-            /* Si es el ultimo (que el inicio llego a ser igual al final y no agrego)
-            agregar al final porque es mayor que todos los valores
-            (cursorAnterior quedo apuntando al ultimo y cursor a nulo).
-            */
-            if(inicio==size){
-                cursorAnterior.setNext(nodo);
-            }
-            this.size++;
-        }
-    }
-
     /*
-     Insertar en una lista vinculada al principio tiene costo O(1)
-    y en un arreglo tiene costo O(n)
-    */
+    Insertar en una lista vinculada al principio tiene costo O(1)
+   y en un arreglo tiene costo O(n)
+   */
     public void insertFront(T info) {
         Node<T> tmp = new Node<T>(info, null);
         tmp.setNext(this.first);
@@ -63,6 +27,65 @@ public class MySimpleLinkedList<T extends Comparable<T>> implements Iterable<Nod
         this.first = this.first.getNext();
         size--;
         return info;
+    }
+
+    //ver si esta vacia una lista vinculada es O(1) y en un arreglo o(n) ??
+    public boolean isEmpty() {
+        return this.first == null;
+    }
+
+    //Buscar en una lista vinculada es O(n) y en un arreglo O(1)
+    public T get(int index) {
+        if (index >= 0 && this.size > index) {
+            Iterator<T> iterator = this.iterator();
+            T valorIterator = null;
+            int pos = -1;
+            //usamos hasNext por robustez y seguridad en el codigo
+            while (pos < index && iterator.hasNext()) {
+                pos++;
+                valorIterator = iterator.next();
+            }
+            //if por buena practica
+            if (pos == index) {
+                return valorIterator;
+            }
+        } return null;
+    }
+
+    public IteratorSimpleLinkedList iterator(){
+        return new IteratorSimpleLinkedList(this.first);
+    }
+
+    public void addOrdenado(T info){
+        Node<T> nodoNuevo = new Node<>(info);
+        if(this.first!=null){
+            Node<T> cursorAnterior = null;
+            Node<T> cursor = this.first;
+            //itero toda la lista
+            while(cursor!=null){
+                if(nodoNuevo.getInfo().compareTo(cursor.getInfo())>0){
+                    cursorAnterior = cursor;
+                    cursor = cursor.getNext();
+                }else{
+                    // Insertar antes del cursor
+                    nodoNuevo.setNext(cursor);
+                    if (cursorAnterior == null) {
+                        this.first = nodoNuevo; // Insertar al principio
+                    } else {
+                        cursorAnterior.setNext(nodoNuevo); // Insertar en el medio
+                    }
+                    this.size++; // Incremento del tamaño dentro del else
+                    return; // Salida temprana del método
+                }
+            }
+            //si cursor es nulo, el recorrido llego al final (no soy mayor a ninguno), entonces me inserto ultimo
+            //quedo el ultimo elemento en cursorAnterior
+            cursorAnterior.setNext(nodoNuevo);
+            this.size++; // Incremento del tamaño para lista vacía
+        }else{
+            this.first = nodoNuevo;
+            this.size++; // Incremento del tamaño para lista vacía
+        }
     }
 
     //extraer un elemento de la lista vinculada tiene costo O(n) y en un arreglo O(n)
@@ -90,26 +113,7 @@ public class MySimpleLinkedList<T extends Comparable<T>> implements Iterable<Nod
         return infoCursor;
     }
 
-    //ver si esta vacia una lista vinculada es O(1) y en un arreglo o(n) ??
-    public boolean isEmpty() {
-        return this.first == null;
-    }
-
-    //Buscar en una lista vinculada es O(n) y en un arreglo O(1)
-    public T get(int index) {
-        if (index >= 0 && this.size > index) {
-            Node<T> cursor = this.first;
-            int i = 0;
-            while (i < index) { // n
-                cursor = cursor.getNext();
-                i++;
-            }
-            return cursor.getInfo();
-        }
-        return null;
-    }
-
-    //Determinar la cantidad de elementos en una lista vinculada es O(1)
+    //Determinar la cantidad de elementos en una lista vinculada es O(1) y en un arreglo igual
     // y en un arreglo O(n) ??
     public int size() {
         return this.size;
@@ -117,25 +121,13 @@ public class MySimpleLinkedList<T extends Comparable<T>> implements Iterable<Nod
 
     @Override
     public String toString() {
-        boolean existeOtro = false;
-        Node<T> cursor = this.first;
-        if(this.size>=1){
-            existeOtro = true;
-        }else{
-            existeOtro = false;
+        Iterator<T> iterator = this.iterator();
+        String salida = "[";
+        while(iterator.hasNext()){
+            salida += iterator.next() + ", ";
         }
-        String salida = "[ ";
-        while (existeOtro) {
-            salida += cursor.getInfo();
-            if (cursor.getNext() != null) {
-                salida += ", ";
-                cursor = cursor.getNext();
-            } else {
-                existeOtro = false;
-            }
-        }
-        salida += " ]";
-        return salida;
+        salida = salida.substring(0,salida.length()-2);
+        return salida + "]";
     }
 
 
@@ -145,14 +137,14 @@ public class MySimpleLinkedList<T extends Comparable<T>> implements Iterable<Nod
     elemento, o -1 si el elemento no existe en la lista.
      */
     public int indexOf(T valor) {
-        int indice = 0;
-        Node<T> cursor = this.first;
-        while (indice < size) {
-            if (cursor.getInfo() == valor) {
+        int indice = -1;
+        Iterator<T> iterator = this.iterator();
+        T valorIterator = null;
+        while(iterator().hasNext()) {
+            indice++;
+            valorIterator = iterator.next();
+            if(valorIterator==valor){
                 return indice;
-            } else {
-                cursor = cursor.getNext();
-                indice++;
             }
         }
         return -1;
@@ -166,7 +158,7 @@ public class MySimpleLinkedList<T extends Comparable<T>> implements Iterable<Nod
          */
 
         //generar clase privada donde se encuentra el iterador
-        private class IteratorSimpleLinkedList implements Iterator<Node<T>>{
+        public class IteratorSimpleLinkedList implements Iterator<T>{
             private Node<T> cursor;
 
             public IteratorSimpleLinkedList(Node<T> nodo){
@@ -179,10 +171,14 @@ public class MySimpleLinkedList<T extends Comparable<T>> implements Iterable<Nod
             }
 
             @Override
-            public Node<T> next() {
-                Node<T> nodo = this.cursor;
+            public T next() {
+                T info = this.cursor.getInfo();
                 this.cursor = this.cursor.getNext();
-                return nodo;
+                return info;
+            }
+
+            public T getValue(){
+                return this.cursor.getInfo();
             }
         }
 }

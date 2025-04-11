@@ -19,9 +19,8 @@ public class MyDobleLinkedList<T extends Comparable<T>> implements Iterable<T> {
             tmp.setSiguiente(this.first);
             this.first = tmp;
             this.size++;
-        }else{
-            this.first = tmp;
         }
+        this.first = tmp;
     }
 
     @Override
@@ -36,9 +35,9 @@ public class MyDobleLinkedList<T extends Comparable<T>> implements Iterable<T> {
             this.first.setAnterior(null);
             this.size --;
             return info;
-        }else{
-            return null;
         }
+        return null;
+
     }
 
     boolean isEmpty(){

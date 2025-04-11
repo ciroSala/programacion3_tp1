@@ -1,27 +1,49 @@
 package tp1;
+import java.util.IllegalFormatWidthException;
 import java.util.Iterator;
 
 public class Main {
     public static void main(String[] args) {
-        MyDobleLinkedList<Integer> listaDoble = new MyDobleLinkedList<>();
-        listaDoble.insertFront(3);
-        listaDoble.insertFront(4);
-        listaDoble.insertFront(5);
-        listaDoble.insertFront(8);
-        System.out.println(listaDoble.toString());
-        System.out.println(listaDoble.get(2));
+
         /*
         Ejercicio 5
 
-        while(iteratorListaEnteros.hasNext()) {
-            //agarro elemento por elemento
-            Node<Integer> cursorLista1 = iteratorListaEnteros.next();
+        a) Escriba un procedimiento que dadas dos listas construya otra con los elementos comunes,
+        suponiendo que las listas están desordenadas y la lista resultante debe quedar ordenada.
 
-            //me fijo si la lista dos tiene el valor del elemento de la lista uno,
-            //si lo tiene agregar el elemento de la lista uno a la nueva lista
+        Iterator<Integer> iterator = listaEnteros.iterator();
+        int valorLista1 = 0;
+        int valorLista2 = 0;
+        //itero todo los elementos de la lista uno
+        while(iterator.hasNext()) {
+            boolean encontro = false;
+            valorLista1 = iterator.next();
+            //me fijo en la lista dos desde el primer elemento
+            // si tiene el elemento de la lista uno
+            Iterator<Integer> iterator2 = listaEnteros2.iterator();
+            while(iterator2.hasNext() && !encontro){
+                valorLista2 = iterator2.next();
+                //si tiene el valor, agregarlo ordenado en una lista nueva
+                //dejar de buscar el mismo elemento, pasar al elemento siguiente
+                //de la lista uno
+                if(valorLista1==valorLista2){
+                    listaNueva.addOrdenado(valorLista1);
+                    encontro=true;
+                }
+            }
+        }
 
-            if(listaEnteros2.indexOf(cursorLista1.getInfo())!=-1){
-                listaNueva.addOrdenado(cursorLista1.getInfo());
+        b) Las listas están ordenadas y la lista resultante debe mantenerse ordenada.
+
+        while(iterator1.hasNext() && iterator2.hasNext()){
+            if(iterator1.getValue()==iterator2.getValue()){
+                listNueva.addOrdenado(iterator1.getValue());
+                iterator1.next();
+                iterator2.next();
+            } else if (iterator1.getValue()<iterator2.getValue()) {
+                iterator1.next();
+            }else{
+                iterator2.next();
             }
         }
 

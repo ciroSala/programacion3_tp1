@@ -157,7 +157,7 @@ public class MySimpleLinkedList<T extends Comparable<T>> implements Iterable<T>{
         de recorrer la lista de principio a fin si se cuenta con un iterador?
          */
 
-        //generar clase privada donde se encuentra el iterador
+        //generar clase publica donde se encuentra el iterador
         public class IteratorSimpleLinkedList implements Iterator<T>{
             private Node<T> cursor;
 

@@ -18,26 +18,28 @@ public class MyDobleLinkedList<T extends Comparable<T>> implements Iterable<T> {
             this.first.setAnterior(tmp);
             tmp.setSiguiente(this.first);
             this.first = tmp;
-            this.size++;
+        }else{
+            this.first = tmp;
         }
-        this.first = tmp;
-    }
-
-    @Override
-    public Iterator<T> iterator() {
-        return new IteratorDobleLinkedList(this.first);
+        this.size++;
     }
 
     T extractFront(){
+        T info = null;
         if(this.first!=null){
-            T info = this.first.getInfo();
-            this.first = this.first.getSiguiente();
-            this.first.setAnterior(null);
-            this.size --;
-            return info;
+            //si no soy el ultimo, tengo un siguiente
+            if(this.first.getSiguiente()!=null) {
+                info = this.first.getInfo();
+                this.first = this.first.getSiguiente();
+                this.first.setAnterior(null);
+                this.size--;
+            }
+            //si soy el ultimo, no tengo siguiente
+            info = this.first.getInfo();
+            this.first = null;
+            this.size--;
         }
-        return null;
-
+        return info;
     }
 
     boolean isEmpty(){
@@ -49,6 +51,9 @@ public class MyDobleLinkedList<T extends Comparable<T>> implements Iterable<T> {
     }
 
     public String toString(){
+        if(this.isEmpty()){
+            return "[]";
+        }
         Iterator<T> iterator = this.iterator();
         String salida = "[";
         while(iterator.hasNext()){
@@ -73,11 +78,40 @@ public class MyDobleLinkedList<T extends Comparable<T>> implements Iterable<T> {
         }
         return null;
     }
-    private class IteratorDobleLinkedList implements Iterator<T>{
+
+    /*
+     A la implementación de la clase ListaDoblementeVinculada realizada en el ejercicio 1, agregue un método
+    int indexOf(T), que reciba un elemento y retorne el índice donde está almacenado ese
+    elemento, o -1 si el elemento no existe en la lista.
+     */
+    public int indexOf(T valor) {
+        int indice = -1;
+        Iterator<T> iterator = this.iterator();
+        T valorIterator = null;
+        while(iterator().hasNext()) {
+            indice++;
+            valorIterator = iterator.next();
+            if(valorIterator==valor){
+                return indice;
+            }
+        }
+        return -1;
+    }
+
+    @Override
+    public IteratorDobleLinkedList iterator() {
+        return new IteratorDobleLinkedList(this.first);
+    }
+
+    public class IteratorDobleLinkedList implements Iterator<T>{
         private NodeDoble<T> cursor;
 
         public IteratorDobleLinkedList(NodeDoble<T> nodo){
             this.cursor = nodo;
+        }
+
+        public T getValue(){
+            return this.cursor.getInfo();
         }
 
         @Override
@@ -90,6 +124,36 @@ public class MyDobleLinkedList<T extends Comparable<T>> implements Iterable<T> {
             T info = this.cursor.getInfo();
             this.cursor = this.cursor.getSiguiente();
             return info;
+        }
+
+        @Override
+        public void remove() {
+            //verificar si es el primero
+            if(cursor.getAnterior()==null){
+                //verificar si  tiene siguiente
+                if (cursor.getSiguiente() != null){
+                    //si tiene siguiente entonces el primero pasa ser el siguiente del primero actual
+                    //y ahora el primer elemento que deje de apuntar como anterior al anterior primero
+                    first = cursor.getSiguiente();
+                    first.setAnterior(null);
+                    size--;
+                }else{
+                    //entonces actualizar directamente el primero a nulo
+                    first = null;
+                    size--;
+                }
+            } else if (cursor.getSiguiente()==null) { //verificar si es el ultimo
+                //que mi anterior apunte a nulo
+                cursor.getAnterior().setSiguiente(null);
+                size--;
+
+            }else{  //si no es ninguno de los anteriores casos, es uno del medio
+                //que mi anterior apunte como siguiente a mi siguiente y mi siguiente apunte
+                //como anterior a mi anterior
+                cursor.getAnterior().setSiguiente(cursor.getSiguiente());
+                cursor.getSiguiente().setAnterior(cursor.getAnterior());
+                size--;
+            }
         }
     }
 }

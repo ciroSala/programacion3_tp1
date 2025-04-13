@@ -1,9 +1,23 @@
 package tp1;
-import java.util.IllegalFormatWidthException;
-import java.util.Iterator;
 
 public class Main {
     public static void main(String[] args) {
+        MyDobleLinkedList<Integer> listaEnteros = new MyDobleLinkedList<>();
+        listaEnteros.insertFront(5);
+        listaEnteros.insertFront(8);
+        listaEnteros.insertFront(18);
+        listaEnteros.insertFront(2);
+        listaEnteros.insertFront(33);
+        System.out.println(listaEnteros);
+        MyDobleLinkedList<Integer>.IteratorDobleLinkedList iterator = listaEnteros.iterator();
+        while(iterator.hasNext()){
+            if(iterator.getValue().compareTo(5)==0){
+                iterator.remove();
+            }
+            iterator.next();
+        }
+        System.out.println(listaEnteros);
+
 
         /*
         Ejercicio 5

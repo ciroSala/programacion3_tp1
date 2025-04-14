@@ -33,11 +33,11 @@ public class MyDobleLinkedList<T extends Comparable<T>> implements Iterable<T> {
                 this.first = this.first.getSiguiente();
                 this.first.setAnterior(null);
                 this.size--;
+            }else{   //si soy el ultimo, no tengo siguiente
+                info = this.first.getInfo();
+                this.first = null;
+                this.size--;
             }
-            //si soy el ultimo, no tengo siguiente
-            info = this.first.getInfo();
-            this.first = null;
-            this.size--;
         }
         return info;
     }
@@ -66,8 +66,8 @@ public class MyDobleLinkedList<T extends Comparable<T>> implements Iterable<T> {
     }
 
     T get(int index){
-        if(index<this.size){
-            T salida = null;
+        if(index<this.size){    // verificar que el indice este entre los rangos correctos             // si el indice es menor a 0 no entra al bucle y devuelve salida null
+            T salida = null;    //
             int inicio = -1;
             Iterator<T> iterator = this.iterator();
             while(iterator.hasNext() && inicio<index){
@@ -85,15 +85,14 @@ public class MyDobleLinkedList<T extends Comparable<T>> implements Iterable<T> {
     elemento, o -1 si el elemento no existe en la lista.
      */
     public int indexOf(T valor) {
-        int indice = -1;
-        Iterator<T> iterator = this.iterator();
-        T valorIterator = null;
-        while(iterator().hasNext()) {
-            indice++;
-            valorIterator = iterator.next();
-            if(valorIterator==valor){
+        int indice = 0;
+        IteratorDobleLinkedList iterator = this.iterator();
+        while(iterator.hasNext()) {
+            if(iterator.getValue().compareTo(valor)==0){
                 return indice;
             }
+            iterator.next();
+            indice++;
         }
         return -1;
     }
